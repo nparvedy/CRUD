@@ -3,31 +3,86 @@
 use App\App;
 use App\Table\User;
 use App\Table\Customer;
+use App\CssForm;
+
+
 
 $customer = Customer::find($_GET['id']);
 if ($customer === false){
     App::notFound();
 }
-$user = User::LastByCustomer($_GET['id']);
-$customers = Customer::all();
+$customer = User::customer($_GET['id']);
+// $customers = Customer::all();
+
+
 
 ?>
 
 <div class="row">
     <div class="col-sm-8">
     <?php
-
+        
+        $form = new CssForm($_POST);
 
         foreach ($customer as $post):
 
         ?>
+            
+            <h2>Entreprise : <a href="<?= $post->url; ?>"><?= $post->user; ?></a> </h2>
 
-        
-            <h1><?= $customer->nom ?></h1>
+            <?php if (isset($_GET['edit']) == 'edit'){
+                if (isset($_POST['nom'])){
+                    User::updateCustomer($_POST['nom'],$_POST['prenom'],$_POST['cp'],$_POST['numero'],$_POST['mail'],$_POST['adresse'], $_GET['id']);
+                
+                    header('Location: ' . $post->url . '');
+                }
+                
+            ?>
 
-            <h2><a href="<?= $post->url; ?>"><?= $post->nom; ?></a> </h2>
+                <form action="" method="post">
 
-            <p><em><?= $post->customer; ?></em></p>
+            <?php 
+                echo $form->input('nom', $post->nom);
+                echo $form->input('prenom', $post->prenom);
+                echo $form->input('cp', $post->cp );
+                echo $form->input('adresse', $post->adresse );
+                echo $form->input('numero', $post->numero );
+                echo $form->input('mail', $post->mail );
+                echo $form->submit();
+                ?>
+                <a href="<?= $post->url; ?>">retour</a>
+
+            <?php
+
+                }else {
+            ?>
+
+                <p> Nom : <?= $post->nom; ?></p>
+                <p> Prenom : <?= $post->prenom; ?></p>
+                <p> CP : <?= $post->cp; ?></p>
+                <p> Adresse : <?= $post->adresse; ?></p>
+                <p> Numero : <?= $post->numero; ?></p>
+                <p> Mail : <?= $post->mail; ?></p>
+
+                <a href="<?= $post->url;?>&edit=edit">Modifier</a>
+                <a href="<?= $post->url;?>&delete=delete">Supprimer</a>
+
+                <?php
+                if (isset($_GET['delete']) == 'delete'){
+                    User::deleteCustomer($post->id);
+                    
+                    header('Location: http://localhost/ecf2crud/crud/public/');
+                }
+
+                
+
+                ?>
+
+            <?php
+                }
+            ?>
+
+            
 
 
 
@@ -36,13 +91,5 @@ $customers = Customer::all();
         endforeach; 
 
         ?>
-    </div>
-
-    <div class="col-sm-4">
-        <ul>
-            <?php foreach(\App\Table\Customer::all() as $customer): ?>
-                <li><a href="<?= $customer->url; ?>"><?= $customer->nom; ?></li>
-            <?php endforeach; ?>
-        </ul>
     </div>
 </div>

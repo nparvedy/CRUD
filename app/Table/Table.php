@@ -24,6 +24,26 @@ class Table{
         
     }
 
+    public static function update($statement, $attributes = null, $one = false){
+        if ($attributes){
+            return App::getDb()->prepareUpdate($statement , $attributes, get_called_class(), $one);
+        }else {
+            return App::getDb()->queryUpdate($statement, get_called_class(), $one);
+        }
+
+        
+    }
+
+    public static function delete($statement, $attributes = null, $one = false){
+        if ($attributes){
+            return App::getDb()->prepareDelete($statement , $attributes, get_called_class(), $one);
+        }else {
+            return App::getDb()->queryDelete($statement, get_called_class(), $one);
+        }
+
+        
+    }
+
     public static function all(){
         return App::getDb()->query(
             "SELECT *

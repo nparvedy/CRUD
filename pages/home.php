@@ -21,6 +21,8 @@
         endforeach; 
 
         ?>
+
+        <a href="index.php?p=add">Add un client</a>
     </div>
 
     

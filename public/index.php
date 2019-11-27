@@ -16,8 +16,8 @@ if ($p === 'home') {
     require '../pages/home.php';
 } elseif($p === 'user'){
     require '../pages/user.php';
-} elseif($p === 'categorie'){
-    require '../pages/categorie.php';
+} elseif($p === 'add'){
+    require '../pages/add.php';
 }else {
     echo "désolé la page demander n'existe pas";
 }

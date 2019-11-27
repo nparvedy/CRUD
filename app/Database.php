@@ -42,6 +42,40 @@ class Database{
         return $datas;
     }
 
+    public function queryUpdate($statement, $class_name, $one = false){
+        $req = $this->getPDO()->query($statement);
+        return $req->execute(); // fin du script test
+        $req->setFetchMode(PDO::FETCH_CLASS, $class_name);
+        if($one){
+            $datas = $req->fetch();
+
+        }else {
+            $datas = $req->fetchAll();
+        }
+
+        return $datas;
+    }
+
+    public function prepareUpdate($statement, $attributes, $class_name, $one = false){
+        $req = $this->getPDO()->prepare($statement);
+        $req->execute(array(
+            'nom' => $attributes[0],
+            'prenom' => $attributes[1],
+            'cp' => $attributes[2],
+            'numero' => $attributes[3],
+            'mail' => $attributes[4],
+            'adresse' => $attributes[5],
+            'id' => $attributes[6]
+        ));
+
+        return "vous avez bien modifier"; // a modifier
+    }
+
+    public function prepareDelete($statement, $attributes, $class_name, $one = false){
+        $req = $this->getPDO()->prepare($statement);
+        return $req->execute($attributes);
+    }
+
     public function prepare($statement, $attributes, $class_name, $one = false){
 
         $req = $this->getPDO()->prepare($statement);
